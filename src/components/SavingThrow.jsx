@@ -8,6 +8,7 @@ export default function SavingThrow() {
 	const [searchParam, setSearchParam] = useState("");
 	const [spells, setSpells] = useState([]);
 	const [STspells, setSTSpells] = useState([]);
+	const [spellsToDisplay, setSpellsToDisplay] = useState([]);
 
 	useEffect(() => {
 		async function getAllSpells() {
@@ -17,6 +18,8 @@ export default function SavingThrow() {
 				setSpells(APIResponse);
 				await savingThrowSpells(spells);
 				console.log("STspells", STspells);
+				await savingSpells();
+				console.log("spellsToDisplay", spellsToDisplay);
 			} else {
 				console.error("Unable to fetch all spells");
 			}
@@ -46,9 +49,23 @@ export default function SavingThrow() {
 	// Allows for search functionality
 	// Users can search any keyword in the name
 
-	let spellsToDisplay = searchParam
-		? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
-		: spells;
+	async function savingSpells() {
+		try {
+			let savingSpells = searchParam
+				? STspells.filter((spell) =>
+						spell.name.toLowerCase().includes(searchParam)
+				  )
+				: STspells;
+			setSpellsToDisplay(savingSpells);
+			return spellsToDisplay;
+		} catch (error) {
+			console.error("Can't render saving spells array", error);
+		}
+	}
+
+	// let spellsToDisplay = searchParam
+	// 	? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
+	// 	: spells;
 
 	// Filter by spell level
 
