@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { fetchSingleSpell } from "../API/fetching";
 
-export default function SingleSpellDetails({ SDBspells, SDBindex }) {
+export default function SingleSpellDetails({ spells, spellIndex }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [spell, setSpell] = useState({});
-	const SSDspells = SDBspells;
-	const SSDindex = SDBindex;
+	const SSDspells = spells;
+	const SSDindex = spellIndex;
 
 	useEffect(() => {
 		async function getSingleSpell() {
@@ -22,8 +22,8 @@ export default function SingleSpellDetails({ SDBspells, SDBindex }) {
 	}, []);
 
 	return (
-		<div id="single-card-info">
-			<h4>Name: {spell.name}</h4>
+		<div>
+			<h4>{spell.name}</h4>
 			<h4>Level: {spell.level > 0 ? spell.level : "Cantrip"}</h4>
 
 			<h4>Range: {spell.range}</h4>
@@ -31,8 +31,12 @@ export default function SingleSpellDetails({ SDBspells, SDBindex }) {
 			<h4>Components: {JSON.stringify(spell.components)}</h4>
 			<h4>Concentration? {spell.concentration ? "Yes" : "No"}</h4>
 			<h4>Ritual: {spell.ritual ? "Yes" : "No"}</h4>
+			<h4>School: {spell.school.name}</h4>
+			<p>
+				Description: {spell.desc[0]} {spell.desc[1]}
+			</p>
 
-			<h5>Classes: {JSON.stringifiy(spell.classes)}</h5>
+			{/* <h5>Classes: {JSON.stringify(spell.classes)}</h5> */}
 		</div>
 	);
 }

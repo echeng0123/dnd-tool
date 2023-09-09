@@ -1,7 +1,7 @@
 // This component handles the button opening for seeing spell details
 
 import { useState } from "react";
-import SingleSpellDetails from "./SingleSpellDetails";
+import SingleSpellDetails from "../SingleSpellDetails";
 
 export default function SpellDetailsButton({ spells, spellIndex }) {
 	const [isOpen, setIsOpen] = useState(false);

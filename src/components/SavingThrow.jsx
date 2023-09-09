@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { joinSpells } from "../API/fetching";
-import SpellDetailsButton from "./SpellDetailsButton";
+import SingleSpellDetails from "./SingleSpellDetails";
 
 export default function SavingThrow() {
 	const [searchParam, setSearchParam] = useState("");
@@ -87,7 +87,7 @@ export default function SavingThrow() {
 					return (
 						// eslint-disable-next-line react/jsx-key
 						<div id="single-spell-card">
-							<SpellDetailsButton spells={spells} spellIndex={spellIndex} />
+							<SingleSpellDetails spells={spells} spellIndex={spellIndex} />
 						</div>
 					);
 				})}
