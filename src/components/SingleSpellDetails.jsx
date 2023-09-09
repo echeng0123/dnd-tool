@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { fetchSingleSpell } from "../API/fetching";
 
-export default function SingleSpellDetails({ spells, spellIndex }) {
-	const [isOpen, setIsOpen] = useState(false);
+export default function SingleSpellDetails({ spellST, spellIndex }) {
 	const [spell, setSpell] = useState({});
-	const SSDspells = spells;
+	const SSDspell = spellST;
 	const SSDindex = spellIndex;
+	const spellLength = Object.keys(spell).length;
 
 	useEffect(() => {
 		async function getSingleSpell() {
@@ -22,21 +22,28 @@ export default function SingleSpellDetails({ spells, spellIndex }) {
 	}, []);
 
 	return (
-		<div>
-			<h4>{spell.name}</h4>
-			<h4>Level: {spell.level > 0 ? spell.level : "Cantrip"}</h4>
+		<>
+			{spellLength > 0 ? (
+				<div>
+					<h3>{spell.name}</h3>
+					<h4>Level: {spell.level > 0 ? spell.level : "Cantrip"}</h4>
 
-			<h4>Range: {spell.range}</h4>
-			<h4>Casting Time: {spell.casting_time}</h4>
-			<h4>Components: {JSON.stringify(spell.components)}</h4>
-			<h4>Concentration? {spell.concentration ? "Yes" : "No"}</h4>
-			<h4>Ritual: {spell.ritual ? "Yes" : "No"}</h4>
-			<h4>School: {spell.school.name}</h4>
-			<p>
-				Description: {spell.desc[0]} {spell.desc[1]}
-			</p>
+					<h4>Range: {spell.range}</h4>
+					<h4>Casting Time: {spell.casting_time}</h4>
+					<h4>Components: {JSON.stringify(spell.components)}</h4>
+					<h4>Concentration? {spell.concentration ? "Yes" : "No"}</h4>
+					<h4>Ritual: {spell.ritual ? "Yes" : "No"}</h4>
+					<h4>School: {SSDspell.school.name}</h4>
+					{/* <h4>Saving Throw: {SSDspell.dc.dc_type.name}</h4> */}
+					<p>
+						Description: {SSDspell.desc[0]} {SSDspell.desc[1]}
+					</p>
 
-			{/* <h5>Classes: {JSON.stringify(spell.classes)}</h5> */}
-		</div>
+					{/* <h5>Classes: {JSON.stringify(spell.classes)}</h5> */}
+				</div>
+			) : (
+				<></>
+			)}
+		</>
 	);
 }

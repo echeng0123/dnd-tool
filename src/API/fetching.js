@@ -27,6 +27,7 @@ export const fetchSingleSpell = async (spellUrl) => {
 // JOIN SPELLS
 // Because the D&D 5e API is not set up to grab spells with full info, this function creates a new array that pulls in the full spell list by grabbing each spell individually.
 export async function joinSpells() {
+	console.log("Entering joinSpells");
 	try {
 		const APIResponse = await fetchAllSpellsRaw();
 		const cleanSpells = [];
@@ -36,6 +37,7 @@ export async function joinSpells() {
 			let singleSpell = await fetchSingleSpell(APIResponse.results[i].index);
 			cleanSpells.push(singleSpell);
 		}
+		console.log("cleanSpells", cleanSpells);
 		return cleanSpells;
 	} catch (error) {
 		console.error("Can't fetch all raw spells", error);

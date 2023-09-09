@@ -7,10 +7,11 @@ import SingleSpellDetails from "./SingleSpellDetails";
 export default function SavingThrow() {
 	const [searchParam, setSearchParam] = useState("");
 	const [spells, setSpells] = useState([]);
-	const STspells = [];
+	const [STspells, setSTSpells] = useState([]);
 
 	useEffect(() => {
 		async function getAllSpells() {
+			console.log("entering getAllSpells");
 			const APIResponse = await joinSpells();
 			if (APIResponse != []) {
 				setSpells(APIResponse);
@@ -24,6 +25,7 @@ export default function SavingThrow() {
 	}, []);
 
 	async function savingThrowSpells(spells) {
+		console.log("entering SavingThrowSpells");
 		const objLength = Object.keys(spells).length;
 		const dcKey = "dc";
 		// console.log("spells in STS", spells);
@@ -34,6 +36,7 @@ export default function SavingThrow() {
 					STspells.push(spells[i]);
 				}
 			}
+			setSTSpells(STspells);
 			return STspells;
 		} catch (error) {
 			console.error("Can't make saving throw spells array", error);
@@ -41,13 +44,10 @@ export default function SavingThrow() {
 	}
 
 	// Allows for search functionality
-	// Users can search any keyword in the name or description
+	// Users can search any keyword in the name
+
 	let spellsToDisplay = searchParam
-		? spells.filter(
-				(spell) =>
-					spell.name.toLowerCase().includes(searchParam) ||
-					JSON.stringify(spell.desc).toLowerCase().includes(searchParam)
-		  )
+		? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
 		: spells;
 
 	// Filter by spell level
@@ -84,10 +84,11 @@ export default function SavingThrow() {
 			<div id="all-spell-cards-container">
 				{spellsToDisplay.map((spell) => {
 					const spellIndex = spell.index;
+					const spellST = spell;
 					return (
 						// eslint-disable-next-line react/jsx-key
 						<div id="single-spell-card">
-							<SingleSpellDetails spells={spells} spellIndex={spellIndex} />
+							<SingleSpellDetails spellST={spellST} spellIndex={spellIndex} />
 						</div>
 					);
 				})}
