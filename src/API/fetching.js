@@ -33,7 +33,7 @@ export async function joinSpells() {
 		const cleanSpells = [];
 		const APIlength = Object.keys(APIResponse.results).length;
 
-		for (let i = 0; i < 15; i++) {
+		for (let i = 0; i < APIlength; i++) {
 			let singleSpell = await fetchSingleSpell(APIResponse.results[i].index);
 			cleanSpells.push(singleSpell);
 		}

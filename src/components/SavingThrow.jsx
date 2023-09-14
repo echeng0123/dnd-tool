@@ -11,7 +11,7 @@ export default function SavingThrow() {
 	const [STspells, setSTSpells] = useState([]);
 	const [spellsToDisplay, setSpellsToDisplay] = useState([]);
 
-	// Grabs all spells
+	// Grabs all spells from API (see joinSpells in fetching.js file)
 	useEffect(() => {
 		setSpells([]); // clears to prevent duplicates adding
 		async function getAllSpells() {
@@ -45,10 +45,10 @@ export default function SavingThrow() {
 		getAllSavingSpells();
 	}, [STspells]);
 
+	// This function creates the array of spells that actually have a saving throw
 	async function savingThrowSpells(spells) {
 		const objLength = Object.keys(spells).length;
 		const dcKey = "dc";
-		// console.log("spells in STS", spells);
 
 		setSavThrowSpells([]); //prevent duplicate adds to list
 
@@ -58,7 +58,6 @@ export default function SavingThrow() {
 					savThrowSpells.push(spells[i]);
 				}
 			}
-			// console.log("savThrowSpells ", savThrowSpells);
 			setSTSpells(savThrowSpells);
 			return STspells;
 		} catch (error) {
