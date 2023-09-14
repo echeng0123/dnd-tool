@@ -14,12 +14,12 @@ export default function SavingThrow() {
 		async function getAllSpells() {
 			console.log("entering getAllSpells");
 			const APIResponse = await joinSpells();
-			console.log("APIResponse in ST", APIResponse);
+			// console.log("APIResponse in ST", APIResponse);
 			if (APIResponse != []) {
 				setSpells(APIResponse);
-				console.log("spells is now ", spells);
+				// console.log("spells is now ", spells);
 				await savingThrowSpells(spells);
-				console.log("STspells", STspells);
+				// console.log("STspells", STspells);
 				await savingSpells();
 				console.log("spellsToDisplay", spellsToDisplay);
 			} else {
@@ -27,7 +27,7 @@ export default function SavingThrow() {
 			}
 		}
 		getAllSpells();
-	}, [STspells]);
+	}, []);
 
 	async function savingThrowSpells(spells) {
 		const objLength = Object.keys(spells).length;
@@ -47,7 +47,7 @@ export default function SavingThrow() {
 	}
 
 	async function savingSpells() {
-		console.log("entering savingSpells");
+		// console.log("entering savingSpells");
 		try {
 			let savingSpells = searchParam
 				? STspells.filter((spell) =>

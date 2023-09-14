@@ -4,35 +4,39 @@ import { useState, useEffect } from "react";
 import { fetchSingleSpell } from "../API/fetching";
 
 export default function SingleSpellDetails({ spellST, spellIndex }) {
-	const [spell, setSpell] = useState({});
+	// const [spell, setSpell] = useState({});
 	const SSDspell = spellST;
 	const SSDindex = spellIndex;
-	const spellLength = Object.keys(spell).length;
+	const spellLength = Object.keys(SSDspell).length;
 
-	useEffect(() => {
-		async function getSingleSpell() {
-			const APIResponse = await fetchSingleSpell(SSDindex);
-			if (APIResponse) {
-				setSpell(APIResponse);
-			} else {
-				console.error("Unable to fetch single spell.");
-			}
-		}
-		getSingleSpell();
-	}, []);
+	// console.log("SSDspell", SSDspell);
+
+	// useEffect(() => {
+	// 	async function getSingleSpell() {
+	// 		const APIResponse = await fetchSingleSpell(SSDindex);
+	// 		console.log("APIResponse in SSD ", APIResponse);
+	// 		if (APIResponse) {
+	// 			setSpell(APIResponse);
+	// 			console.log("single spell is ", spell);
+	// 		} else {
+	// 			console.error("Unable to fetch single spell.");
+	// 		}
+	// 	}
+	// 	getSingleSpell();
+	// }, []);
 
 	return (
 		<>
 			{spellLength > 0 ? (
 				<div>
-					<h3>{spell.name}</h3>
-					<h4>Level: {spell.level > 0 ? spell.level : "Cantrip"}</h4>
+					<h3>{SSDspell.name}</h3>
+					<h4>Level: {SSDspell.level > 0 ? SSDspell.level : "Cantrip"}</h4>
 
-					<h4>Range: {spell.range}</h4>
-					<h4>Casting Time: {spell.casting_time}</h4>
-					<h4>Components: {JSON.stringify(spell.components)}</h4>
-					<h4>Concentration? {spell.concentration ? "Yes" : "No"}</h4>
-					<h4>Ritual: {spell.ritual ? "Yes" : "No"}</h4>
+					<h4>Range: {SSDspell.range}</h4>
+					<h4>Casting Time: {SSDspell.casting_time}</h4>
+					<h4>Components: {JSON.stringify(SSDspell.components)}</h4>
+					<h4>Concentration? {SSDspell.concentration ? "Yes" : "No"}</h4>
+					<h4>Ritual: {SSDspell.ritual ? "Yes" : "No"}</h4>
 					<h4>School: {SSDspell.school.name}</h4>
 					<h4>Saving Throw: {SSDspell.dc.dc_type.name}</h4>
 					<p>
