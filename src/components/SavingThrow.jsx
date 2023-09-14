@@ -14,8 +14,10 @@ export default function SavingThrow() {
 		async function getAllSpells() {
 			console.log("entering getAllSpells");
 			const APIResponse = await joinSpells();
+			console.log("APIResponse in ST", APIResponse);
 			if (APIResponse != []) {
 				setSpells(APIResponse);
+				console.log("spells is now ", spells);
 				await savingThrowSpells(spells);
 				console.log("STspells", STspells);
 				await savingSpells();
@@ -25,13 +27,11 @@ export default function SavingThrow() {
 			}
 		}
 		getAllSpells();
-	}, []);
+	}, [STspells]);
 
 	async function savingThrowSpells(spells) {
-		console.log("entering SavingThrowSpells");
 		const objLength = Object.keys(spells).length;
 		const dcKey = "dc";
-		// console.log("spells in STS", spells);
 
 		try {
 			for (let i = 0; i < objLength; i++) {
@@ -46,10 +46,8 @@ export default function SavingThrow() {
 		}
 	}
 
-	// Allows for search functionality
-	// Users can search any keyword in the name
-
 	async function savingSpells() {
+		console.log("entering savingSpells");
 		try {
 			let savingSpells = searchParam
 				? STspells.filter((spell) =>
@@ -63,15 +61,57 @@ export default function SavingThrow() {
 		}
 	}
 
-	// let spellsToDisplay = searchParam
-	// 	? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
-	// 	: spells;
+	// Allows for search functionality
+	// Users can search any keyword in the name
+	async function searchSpells(spells) {
+		let spellsToDisplaySearch = searchParam
+			? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
+			: spells;
+		setSpellsToDisplay(spellsToDisplaySearch);
+		return spellsToDisplay;
+	}
+
+	// Filter by saving throw type
+	async function savingThrowFilter(stat) {
+		console.log("stat is ", stat.target.innerHTML);
+		if (stat.target.innerHTML == "STR") {
+			const filteredSpells = STspells.filter(
+				(spell) => spell.dc.dc_type.index == "str"
+			);
+			setSpellsToDisplay(filteredSpells);
+		} else if (stat.target.innerHTML == "DEX") {
+			const filteredSpells = STspells.filter(
+				(spell) => spell.dc.dc_type.index === "dex"
+			);
+			setSpellsToDisplay(filteredSpells);
+		} else if (stat.target.innerHTML == "CON") {
+			const filteredSpells = STspells.filter(
+				(spell) => spell.dc.dc_type.index == "con"
+			);
+			setSpellsToDisplay(filteredSpells);
+		} else if (stat.target.innerHTML == "INT") {
+			const filteredSpells = STspells.filter(
+				(spell) => spell.dc.dc_type.index == "int"
+			);
+			setSpellsToDisplay(filteredSpells);
+		} else if (stat.target.innerHTML == "WIS") {
+			const filteredSpells = STspells.filter(
+				(spell) => spell.dc.dc_type.index == "wis"
+			);
+			setSpellsToDisplay(filteredSpells);
+		} else if (stat.target.innerHTML == "CHA") {
+			const filteredSpells = STspells.filter(
+				(spell) => spell.dc.dc_type.index == "cha"
+			);
+			setSpellsToDisplay(filteredSpells);
+		}
+		console.log("spellsToDisplay in ST Filter ", spellsToDisplay);
+		return spellsToDisplay;
+	}
 
 	// Filter by spell level
 
 	// Filter by school of magic
-
-	// Filter by saving throw type
 
 	// Filter by class
 
@@ -97,6 +137,56 @@ export default function SavingThrow() {
 						}
 					/>
 				</label>
+			</div>
+			<div id="filter-buttons">
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					STR
+				</button>
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					DEX
+				</button>
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					CON
+				</button>
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					INT
+				</button>
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					WIS
+				</button>
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					CHA
+				</button>
 			</div>
 			<div id="all-spell-cards-container">
 				{spellsToDisplay.map((spell) => {

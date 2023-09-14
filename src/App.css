@@ -70,3 +70,12 @@
      max-width: 15dvw;
      text-align: left;
 }
+
+#filter-buttons {
+    margin: 1rem;
+    padding: 1rem;
+}
+
+#filter-button {
+    margin: 0 1rem;
+}

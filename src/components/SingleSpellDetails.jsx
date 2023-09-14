@@ -34,7 +34,7 @@ export default function SingleSpellDetails({ spellST, spellIndex }) {
 					<h4>Concentration? {spell.concentration ? "Yes" : "No"}</h4>
 					<h4>Ritual: {spell.ritual ? "Yes" : "No"}</h4>
 					<h4>School: {SSDspell.school.name}</h4>
-					{/* <h4>Saving Throw: {SSDspell.dc.dc_type.name}</h4> */}
+					<h4>Saving Throw: {SSDspell.dc.dc_type.name}</h4>
 					<p>
 						Description: {SSDspell.desc[0]} {SSDspell.desc[1]}
 					</p>
