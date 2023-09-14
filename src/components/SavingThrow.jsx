@@ -7,21 +7,21 @@ import SingleSpellDetails from "./SingleSpellDetails";
 export default function SavingThrow() {
 	const [searchParam, setSearchParam] = useState("");
 	const [spells, setSpells] = useState([]);
+	const [savThrowSpells, setSavThrowSpells] = useState([]);
 	const [STspells, setSTSpells] = useState([]);
 	const [spellsToDisplay, setSpellsToDisplay] = useState([]);
 
+	// Grabs all spells
 	useEffect(() => {
+		setSpells([]); // clears to prevent duplicates adding
 		async function getAllSpells() {
 			console.log("entering getAllSpells");
 			const APIResponse = await joinSpells();
-			// console.log("APIResponse in ST", APIResponse);
-			if (APIResponse != []) {
+			console.log("APIResponse in ST", APIResponse);
+			console.log("APIResponse length", APIResponse.length);
+			if (APIResponse.length > 0) {
 				setSpells(APIResponse);
-				// console.log("spells is now ", spells);
-				await savingThrowSpells(spells);
-				// console.log("STspells", STspells);
-				await savingSpells();
-				console.log("spellsToDisplay", spellsToDisplay);
+				await savingSpells(STspells);
 			} else {
 				console.error("Unable to fetch all spells");
 			}
@@ -29,24 +29,46 @@ export default function SavingThrow() {
 		getAllSpells();
 	}, []);
 
+	// Grabs all spells that have a saving throw
+	useEffect(() => {
+		async function getAllSavingThrowSpells() {
+			await savingThrowSpells(spells);
+		}
+		getAllSavingThrowSpells();
+	}, [spells]);
+
+	// Grabs all spells in preparation for search, filter, etc
+	useEffect(() => {
+		async function getAllSavingSpells() {
+			await savingSpells(STspells);
+		}
+		getAllSavingSpells();
+	}, [STspells]);
+
 	async function savingThrowSpells(spells) {
 		const objLength = Object.keys(spells).length;
 		const dcKey = "dc";
+		// console.log("spells in STS", spells);
+
+		setSavThrowSpells([]); //prevent duplicate adds to list
 
 		try {
 			for (let i = 0; i < objLength; i++) {
 				if (dcKey in spells[i]) {
-					STspells.push(spells[i]);
+					savThrowSpells.push(spells[i]);
 				}
 			}
-			setSTSpells(STspells);
+			// console.log("savThrowSpells ", savThrowSpells);
+			setSTSpells(savThrowSpells);
 			return STspells;
 		} catch (error) {
 			console.error("Can't make saving throw spells array", error);
 		}
 	}
 
-	async function savingSpells() {
+	// Allows for search functionality
+	// Users can search any keyword in the name
+	async function savingSpells(STspells) {
 		// console.log("entering savingSpells");
 		try {
 			let savingSpells = searchParam
@@ -61,19 +83,16 @@ export default function SavingThrow() {
 		}
 	}
 
-	// Allows for search functionality
-	// Users can search any keyword in the name
-	async function searchSpells(spells) {
-		let spellsToDisplaySearch = searchParam
-			? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
-			: spells;
-		setSpellsToDisplay(spellsToDisplaySearch);
-		return spellsToDisplay;
-	}
+	// async function searchSpells(spells) {
+	// 	let spellsToDisplaySearch = searchParam
+	// 		? spells.filter((spell) => spell.name.toLowerCase().includes(searchParam))
+	// 		: spells;
+	// 	setSpellsToDisplay(spellsToDisplaySearch);
+	// 	return spellsToDisplay;
+	// }
 
 	// Filter by saving throw type
 	async function savingThrowFilter(stat) {
-		console.log("stat is ", stat.target.innerHTML);
 		if (stat.target.innerHTML == "STR") {
 			const filteredSpells = STspells.filter(
 				(spell) => spell.dc.dc_type.index == "str"
@@ -198,18 +217,22 @@ export default function SavingThrow() {
 					ALL
 				</button>
 			</div>
-			<div id="all-spell-cards-container">
-				{spellsToDisplay.map((spell) => {
-					const spellIndex = spell.index;
-					const spellST = spell;
-					return (
-						// eslint-disable-next-line react/jsx-key
-						<div id="single-spell-card">
-							<SingleSpellDetails spellST={spellST} spellIndex={spellIndex} />
-						</div>
-					);
-				})}
-			</div>
+			{spellsToDisplay ? (
+				<div id="all-spell-cards-container">
+					{spellsToDisplay.map((spell) => {
+						const spellIndex = spell.index;
+						const spellST = spell;
+						return (
+							// eslint-disable-next-line react/jsx-key
+							<div id="single-spell-card">
+								<SingleSpellDetails spellST={spellST} spellIndex={spellIndex} />
+							</div>
+						);
+					})}
+				</div>
+			) : (
+				<></>
+			)}
 		</div>
 	);
 }
