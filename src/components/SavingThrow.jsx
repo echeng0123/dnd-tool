@@ -11,23 +11,49 @@ export default function SavingThrow() {
 	const [STspells, setSTSpells] = useState([]);
 	const [spellsToDisplay, setSpellsToDisplay] = useState([]);
 
+	const [worker, setWorker] = useState(null);
+
+	// start connection to worker on component load
+	worker.postMessage({
+		connectionStatus: "init",
+	});
+
+	// Start connection to worker
+	// const handleStopConnection = () => {
+	// 	worker.postMessage({
+	// 		connectionStatus: "stop",
+	// 	});
+	// };
+
+	useEffect(() => {
+		const myWorker = new Worker(new URL("../API/worker.js", import.meta.url));
+		setWorker(myWorker);
+
+		return () => {
+			myWorker.terminate();
+		};
+	}, []);
+
 	// Grabs all spells from API (see joinSpells in fetching.js file)
 	useEffect(() => {
 		setSpells([]); // clears to prevent duplicates adding
+
 		async function getAllSpells() {
-			console.log("entering getAllSpells");
-			const APIResponse = await joinSpells();
-			console.log("APIResponse in ST", APIResponse);
-			console.log("APIResponse length", APIResponse.length);
-			if (APIResponse.length > 0) {
-				setSpells(APIResponse);
-				await savingSpells(STspells);
-			} else {
-				console.error("Unable to fetch all spells");
+			if (worker) {
+				console.log("entering getAllSpells");
+				const APIResponse = await joinSpells();
+				console.log("APIResponse in ST", APIResponse);
+				console.log("APIResponse length", APIResponse.length);
+				if (APIResponse.length > 0) {
+					setSpells(APIResponse);
+					await savingSpells(STspells);
+				} else {
+					console.error("Unable to fetch all spells");
+				}
 			}
 		}
 		getAllSpells();
-	}, []);
+	}, [worker]);
 
 	// Grabs all spells that have a saving throw
 	useEffect(() => {
