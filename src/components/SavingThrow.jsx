@@ -104,6 +104,8 @@ export default function SavingThrow() {
 				(spell) => spell.dc.dc_type.index == "cha"
 			);
 			setSpellsToDisplay(filteredSpells);
+		} else if (stat.target.innerHTML == "ALL") {
+			setSpellsToDisplay(STspells);
 		}
 		console.log("spellsToDisplay in ST Filter ", spellsToDisplay);
 		return spellsToDisplay;
@@ -186,6 +188,14 @@ export default function SavingThrow() {
 					}}
 				>
 					CHA
+				</button>
+				<button
+					id="filter-button"
+					onClick={(stat) => {
+						savingThrowFilter(stat);
+					}}
+				>
+					ALL
 				</button>
 			</div>
 			<div id="all-spell-cards-container">
