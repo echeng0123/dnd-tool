@@ -1,6 +1,7 @@
 // FETCHING FUNCTIONS
 
 const API_URL = `https://www.dnd5eapi.co/api`;
+const worker = new Worker("./worker.js");
 
 // FETCH ALL SPELLS (RAW)
 export const fetchAllSpellsRaw = async () => {
@@ -26,6 +27,7 @@ export const fetchSingleSpell = async (spellUrl) => {
 
 // JOIN SPELLS
 // Because the D&D 5e API is not set up to grab spells with full info, this function creates a new array that pulls in the full spell list by grabbing each spell individually.
+
 export async function joinSpells() {
 	console.log("Entering joinSpells");
 	try {
