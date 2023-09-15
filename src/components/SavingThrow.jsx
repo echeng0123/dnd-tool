@@ -1,8 +1,11 @@
 // This component renders the saving throw tool
 
+import React, { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { joinSpells } from "../API/fetching";
-import SingleSpellDetails from "./SingleSpellDetails";
+// import SingleSpellDetails from "./SingleSpellDetails";
+const SingleSpellDetails = dynamic(() => import("./SingleSpellDetails"));
 
 export default function SavingThrow() {
 	const [searchParam, setSearchParam] = useState("");
@@ -11,23 +14,41 @@ export default function SavingThrow() {
 	const [STspells, setSTSpells] = useState([]);
 	const [spellsToDisplay, setSpellsToDisplay] = useState([]);
 
+	const [listItems, setListItems] = useState([]);
+	const [isFetching, setIsFetching] = useState(false);
+	const [page, setPage] = useState(1);
+
 	// Grabs all spells from API (see joinSpells in fetching.js file)
 	useEffect(() => {
 		setSpells([]); // clears to prevent duplicates adding
+
 		async function getAllSpells() {
-			console.log("entering getAllSpells");
-			const APIResponse = await joinSpells();
-			console.log("APIResponse in ST", APIResponse);
-			console.log("APIResponse length", APIResponse.length);
-			if (APIResponse.length > 0) {
-				setSpells(APIResponse);
-				await savingSpells(STspells);
-			} else {
-				console.error("Unable to fetch all spells");
-			}
+			setTimeout(async () => {
+				console.log("entering getAllSpells");
+				const APIResponse = await joinSpells();
+				console.log("APIResponse in ST", APIResponse);
+				console.log("APIResponse length", APIResponse.length);
+				if (APIResponse.length > 0) {
+					setSpells(APIResponse);
+					// await savingSpells(STspells);
+				} else {
+					console.error("Unable to fetch all spells");
+				}
+				getAllSpells();
+			}, 1000);
 		}
-		getAllSpells();
 	}, []);
+
+	// fetch more data
+	useEffect(() => {
+		if (!isFetching) return;
+		fetchMoreListItems();
+	}, [isFetching]);
+
+	const fetchMoreListItems = () => {
+		getAllSpells();
+		setIsFetching(false);
+	};
 
 	// Grabs all spells that have a saving throw
 	useEffect(() => {
@@ -223,8 +244,15 @@ export default function SavingThrow() {
 						const spellST = spell;
 						return (
 							// eslint-disable-next-line react/jsx-key
-							<div id="single-spell-card">
-								<SingleSpellDetails spellST={spellST} spellIndex={spellIndex} />
+							<div>
+								<Suspense fallback={<h5>Loading spells...</h5>}>
+									<div id="single-spell-card">
+										<SingleSpellDetails
+											spellST={spellST}
+											spellIndex={spellIndex}
+										/>
+									</div>
+								</Suspense>
 							</div>
 						);
 					})}
@@ -232,6 +260,7 @@ export default function SavingThrow() {
 			) : (
 				<></>
 			)}
+			{isFetching && <h1>Fetching more spells...</h1>}
 		</div>
 	);
 }
